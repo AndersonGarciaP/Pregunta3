@@ -6,10 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.example.cibertec.pregunta3.Model.Alumno;
-import pe.example.cibertec.pregunta3.Model.Especialidad;
 import pe.example.cibertec.pregunta3.Service.AlumnoService;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,16 +19,15 @@ public class AlumnoController {
     @Autowired
     private AlumnoService alumnoService;
     @GetMapping("")
-    public ResponseEntity<List<Alumno>> listarAlumnos() {
-        List<Alumno> alumnoList = alumnoService.listarAlumnos();
+    public ResponseEntity<List<Alumno>> listarEstados(){
+        List<Alumno> alumnoList = new ArrayList<>();
+        alumnoService.listarAlumnos().forEach(alumnoList::add);
 
-        if (alumnoList.isEmpty()) {
+        if(alumnoList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        alumnoList.forEach(alumno -> alumno.setIdesp(alumno.getEspecialidad().getIdesp()));
-
         return new ResponseEntity<>(alumnoList, HttpStatus.OK);
+
     }
 
     @GetMapping("/{id}")
@@ -36,19 +35,17 @@ public class AlumnoController {
         return new ResponseEntity<>(alumnoService.buscarAlumnoxId(id).get(), HttpStatus.OK);
     }
 
+
     @PostMapping("")
-    public ResponseEntity<Alumno> crearAlumno(@RequestBody Alumno alumno) {
-        Especialidad especialidad = new Especialidad();
-        especialidad.setIdesp(alumno.getEspecialidad().getIdesp());
+    public ResponseEntity<Alumno> crearEstado(@RequestBody Alumno alumno){
         Alumno newAlumno = new Alumno();
         newAlumno.setIdalumno(alumno.getIdalumno());
         newAlumno.setNomalumno(alumno.getNomalumno());
         newAlumno.setApealumno(alumno.getApealumno());
         newAlumno.setProce(alumno.getProce());
-        newAlumno.setEspecialidad(especialidad);
+        newAlumno.setIdesp(alumno.getIdesp());
         return new ResponseEntity<>(alumnoService.registrar(newAlumno),HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Alumno> actualizarAlumno( @PathVariable("id") String id, @RequestBody Alumno alumno){
@@ -56,6 +53,7 @@ public class AlumnoController {
         upadteAlumno.setNomalumno(alumno.getNomalumno());
         upadteAlumno.setApealumno(alumno.getApealumno());
         upadteAlumno.setProce(alumno.getProce());
+        upadteAlumno.setIdesp(alumno.getIdesp());
         return new ResponseEntity<>(alumnoService.registrar(upadteAlumno),HttpStatus.OK);
     }
 

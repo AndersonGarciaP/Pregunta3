@@ -22,19 +22,8 @@ public class Alumno {
     private String apealumno;
     @Column(name = "proce")
     private String proce;
+    @Column(name = "idesp")
+    private String idesp;
 
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "idesp")
-    private Especialidad especialidad;
-
-    public void setIdesp(String idesp) {
-        this.especialidad.setIdesp(idesp);
-    }
-
-    public String getIdesp() {
-        return this.especialidad.getIdesp();
-    }
 
 }
